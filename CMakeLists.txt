@@ -39,6 +39,10 @@ juce_add_plugin(NeekQ
     COPY_PLUGIN_AFTER_BUILD TRUE
 )
 
+# Our source includes <JuceHeader.h> Projucer-style — CMake builds don't
+# generate that automatically, so we have to ask for it explicitly.
+juce_generate_juce_header(NeekQ)
+
 target_sources(NeekQ PRIVATE
     Source/PluginProcessor.cpp
     Source/PluginProcessor.h
