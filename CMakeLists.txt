@@ -69,6 +69,9 @@ target_compile_definitions(NeekQ PUBLIC
     JUCE_WEB_BROWSER=0
     JUCE_USE_CURL=0
     JUCE_DISPLAY_SPLASH_SCREEN=0
+    # MSVC only defines M_PI in <cmath> when this is set before the include;
+    # clang/gcc define it unconditionally, which is why only Windows failed.
+    _USE_MATH_DEFINES=1
 )
 
 target_link_libraries(NeekQ PRIVATE
