@@ -1,0 +1,9 @@
+.DS_Store
+
+# Xcode/CMake build output — regenerated on every build, not source
+Builds/MacOSX/build/
+build/
+
+# Xcode user-specific state
+Builds/MacOSX/*.xcodeproj/xcuserdata/
+Builds/MacOSX/*.xcodeproj/project.xcworkspace/xcuserdata/

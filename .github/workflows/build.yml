@@ -1,0 +1,54 @@
+name: Build NeekQ
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            name: Windows
+          - os: macos-latest
+            name: macOS
+
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.name }}
+
+    steps:
+      - name: Check out the plugin source
+        uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Collect Windows VST3
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          mkdir -p artifact
+          cp -r build/NeekQ_artefacts/Release/VST3/*.vst3 artifact/
+          cp -r build/NeekQ_artefacts/Release/Standalone/*.exe artifact/
+
+      - name: Collect macOS VST3 + AU
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          mkdir -p artifact
+          cp -r build/NeekQ_artefacts/Release/VST3/*.vst3 artifact/
+          cp -r build/NeekQ_artefacts/Release/AU/*.component artifact/
+          cp -r build/NeekQ_artefacts/Release/Standalone/*.app artifact/
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: NeekQ-${{ matrix.name }}
+          path: artifact/
