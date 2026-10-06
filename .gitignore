@@ -3,6 +3,7 @@
 # Xcode/CMake build output — regenerated on every build, not source
 Builds/MacOSX/build/
 build/
+build_aax/
 
 # Xcode user-specific state
 Builds/MacOSX/*.xcodeproj/xcuserdata/

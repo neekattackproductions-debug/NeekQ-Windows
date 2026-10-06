@@ -23,6 +23,18 @@ else()
     set(NEEKQ_FORMATS VST3 Standalone)
 endif()
 
+# AAX requires Avid's proprietary SDK, which isn't checked into this repo and
+# isn't available on the CI runners — off by default, opt in locally with
+# -DNEEKQ_BUILD_AAX=ON -DAAX_SDK_PATH=/path/to/AAX/SDK
+option(NEEKQ_BUILD_AAX "Build the AAX plug-in format (requires the Avid AAX SDK)" OFF)
+if (NEEKQ_BUILD_AAX)
+    if (NOT DEFINED AAX_SDK_PATH)
+        message(FATAL_ERROR "NEEKQ_BUILD_AAX is ON but AAX_SDK_PATH was not set. Pass -DAAX_SDK_PATH=/path/to/AAX/SDK")
+    endif()
+    juce_set_aax_sdk_path("${AAX_SDK_PATH}")
+    list(APPEND NEEKQ_FORMATS AAX)
+endif()
+
 juce_add_plugin(NeekQ
     COMPANY_NAME "Neek Audio"
     PRODUCT_NAME "NeekQ"
@@ -36,6 +48,7 @@ juce_add_plugin(NeekQ
     IS_MIDI_EFFECT FALSE
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE
     VST3_CATEGORIES Fx
+    AAX_CATEGORY "AAX_ePlugInCategory_EQ"
     COPY_PLUGIN_AFTER_BUILD TRUE
 )
 
